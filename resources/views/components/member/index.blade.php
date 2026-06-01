@@ -62,7 +62,7 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="seat_rent" class="form-label">Seat Rent</label>
-                                        <input value="{{ old('seat_rent') }}" type="number" min="0" class="form-control @error('seat_rent')
+                                        <input value="{{ old('seat_rent') }}" type="number" step="any" min="0" class="form-control @error('seat_rent')
                                             is-invalid
                                         @enderror" id="seat_rent" name="seat_rent">
                                         @error('seat_rent')
@@ -105,7 +105,7 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($members as $member)
-                                            
+
                                             <tr class="text-center">
                                                 <td>{{ $member->id }}</td>
                                                 <td class="text-capitalize">{{ $member->name }}</td>
@@ -120,20 +120,20 @@
                                                 </td>
                                                 <td>{{ $member->seat_rent ?? 0 }}</td>
                                                 <td>
-                                                    <a href="javascript:void(0)" 
+                                                    <a href="javascript:void(0)"
                                                     data-member-id="{{ $member->id }}"
                                                     class="btn btn-sm btn-warning me-1 edit-member">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
 
-                                                    <a href="javascript:void(0)" class="btn btn-sm btn-danger" 
+                                                    <a href="javascript:void(0)" class="btn btn-sm btn-danger"
                                                     onclick="return alert('Under Develop')">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
                                                 </td>
                                             </tr>
                                         @endforeach
-                                        
+
                                     </tbody>
                                 </table>
                             </div>
@@ -155,7 +155,7 @@
                         <div class="col-md-3 mb-3">
                             <div class="card text-center  text-white">
                                 <div class="card shadow-sm">
-                                    
+
                                     <div class="card-body">
                                         @if ($inActiveMembers->count() > 0)
                                             <ul class="list-group">
@@ -166,9 +166,9 @@
                                                             <small class="text-muted">Member ID: {{ $inActiveMember->id }}</small>
                                                         </div>
                                                         <div class="form-check form-switch">
-                                                            <input 
-                                                                class="form-check-input status-toggle" 
-                                                                type="checkbox" 
+                                                            <input
+                                                                class="form-check-input status-toggle"
+                                                                type="checkbox"
                                                                 data-id="{{ $inActiveMember->id }}">
                                                             <label class="form-check-label">Activate</label>
                                                         </div>
@@ -182,7 +182,7 @@
                                         @endif
                                     </div>
                                 </div>
-                                
+
                             </div>
                         </div>
                         <div class="col-md-3 mb-3">
@@ -264,7 +264,7 @@ $(document).ready(function() {
                     console.log('Status updated successfully');
                 } else {
                     alert('Failed to update status.');
-                    checkbox.prop('checked', !isActive); 
+                    checkbox.prop('checked', !isActive);
                 }
             },
             error: function() {

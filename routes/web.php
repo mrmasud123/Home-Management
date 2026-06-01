@@ -10,6 +10,7 @@ use App\Models\Member;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Mpdf\Mpdf;
+use App\Http\Controllers\AIChatConttroller;
 
 use Carbon\Carbon;
 
@@ -49,7 +50,7 @@ Route::get('/', function(Request $request){
 
             $months = Meal::selectRaw("DISTINCT DATE_FORMAT(meal_date, '%M %Y') as month_name , DATE_FORMAT(meal_date, '%Y-%m') as month_value")->orderBy('month_value', 'asc')->get();
 
-            $totals=Meal::select('member_name', DB::raw("COUNT(meal_count) as total"))->groupBy('member_name')->orderBy('member_name')->get(); 
+            $totals=Meal::select('member_name', DB::raw("COUNT(meal_count) as total"))->groupBy('member_name')->orderBy('member_name')->get();
                 $currentMonthFull = Carbon::now()->format('F');
 
                 // return $members;
@@ -74,7 +75,7 @@ Route::put('/meal/update/{id}', function($id, Request $request){
     if (!$meal) {
         return response()->json(['success' => false, 'message' => 'Meal not found'], 404);
     }
-   
+
     if ($request->has('mealCount')) {
         $meal->meal_count = $request->mealCount;
     }
@@ -157,7 +158,7 @@ Route::get('/history/{date}', function($date){
 
             $months = Meal::selectRaw("DISTINCT DATE_FORMAT(meal_date, '%M %Y') as month_name , DATE_FORMAT(meal_date, '%Y-%m') as month_value")->orderBy('month_value', 'asc')->get();
 
-            $totals=Meal::select('member_name', DB::raw("COUNT(meal_count) as total"))->groupBy('member_name')->orderBy('member_name')->get(); 
+            $totals=Meal::select('member_name', DB::raw("COUNT(meal_count) as total"))->groupBy('member_name')->orderBy('member_name')->get();
 
 
     $currentMonthFull = Carbon::parse($date)->format('F');
@@ -166,3 +167,5 @@ Route::get('/history/{date}', function($date){
 })->name('meal.history');
 
 Route::post('/members/update-status/{id}', [MemberController::class, 'updateStatus']);
+Route::get('/ai-chat', [\App\Http\Controllers\AIChatController::class, 'index'])->name('ai.chat.index');
+Route::post('/continue-chat', [\App\Http\Controllers\AIChatController::class, 'continueChat'])->name('admin.ai-chat.continue');

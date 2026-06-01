@@ -7,7 +7,7 @@ $(document).ready(function(){
             let isChecked = $(this).is(':checked');
             $("#sameMeal").prop('disabled', !isChecked);
             $('.member-input-row input[type="number"]').each(function() {
-                $(this).prop('disabled', isChecked); 
+                $(this).prop('disabled', isChecked);
             });
         });
         $('#selectAllBazarMember').on('change', function(e) {
@@ -15,7 +15,7 @@ $(document).ready(function(){
             let isChecked = $(this).is(':checked');
             $("#sameBazar").prop('disabled', !isChecked);
             $('.bazar-input-row input[type="number"]').each(function() {
-                $(this).prop('disabled', isChecked); 
+                $(this).prop('disabled', isChecked);
             });
         });
 
@@ -38,15 +38,15 @@ $(document).ready(function(){
 
         $('#mealForm').on('submit', function(e) {
             e.preventDefault();
-            
+
             let form = $(this);
             let mealDate = $('#meal_date').val();
             let data = [];
 
-            form.find('.member-input-row .row').each(function() {
+            form.find('.member-input-row .meal').each(function() {
                 let memberName = $(this).find('label').text().trim();
                 let mealCount = $(this).find('input[type="number"]').val();
-                let memberId = $(this).find('input[type="number"]').data('member-id'); 
+                let memberId = $(this).find('input[type="number"]').data('member-id');
 
                     data.push({
                         member_name: memberName,
@@ -55,9 +55,10 @@ $(document).ready(function(){
                         meal_date: mealDate
                     });
             });
+            console.log(data);
 
             $.ajax({
-                url: '/credentials', 
+                url: '/credentials',
                 method: 'POST',
                 data: {
                     _token: $('input[name="_token"]').val(),
@@ -93,15 +94,15 @@ $(document).ready(function(){
 
         $('#bazarForm').on('submit', function(e) {
             e.preventDefault();
-            
+
             let form = $(this);
             let bazarDate = $('#bazar_date').val();
             let data = [];
 
-            form.find('.bazar-input-row .row').each(function() {
+            form.find('.bazar-input-row .bazar').each(function() {
                 let memberName = $(this).find('label').text().trim();
                 let bazarAmount = $(this).find('input[type="number"]').val();
-                let memberId = $(this).find('input[type="number"]').data('member-id'); 
+                let memberId = $(this).find('input[type="number"]').data('member-id');
 
                     data.push({
                         member_name: memberName,
@@ -112,7 +113,7 @@ $(document).ready(function(){
             });
             console.log(data)
             $.ajax({
-                url: '/bazar', 
+                url: '/bazar',
                 method: 'POST',
                 data: {
                     _token: $('input[name="_token"]').val(),
@@ -126,8 +127,8 @@ $(document).ready(function(){
                         confirmButtonText: 'OK'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            form.trigger('reset');           
-                            window.location.href = '/';      
+                            form.trigger('reset');
+                            window.location.href = '/';
                         }
                     }).catch((err) => {
                         console.error('Swal error:', err);
@@ -148,7 +149,7 @@ $(document).ready(function(){
             });
         });
 
-    
+
     $("#calculateMonthlyExpense").on('submit', function (e) {
 
         e.preventDefault();
@@ -174,11 +175,11 @@ $(document).ready(function(){
                 formData[name] = $(this).val() || 0;
             }
         });
-        // console.log(formData)
+        console.log(formData)
         $.ajax({
             url: '/credentials/calculateMonthlyExpense',
             method: 'POST',
-            data: formData, 
+            data: formData,
             success: function (data) {
     if (data) {
         Swal.close();

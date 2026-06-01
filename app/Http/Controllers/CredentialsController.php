@@ -35,14 +35,14 @@ class CredentialsController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request){
-        $meals = $request->input('meals'); 
-        
-        
+        $meals = $request->input('meals');
+
+
         if(!$meals || !is_array($meals)) {
             return response()->json(['success' => false, 'message' => 'No meal data provided.'], 400);
         }
 
-        $mealDate = $meals[0]['meal_date']; 
+        $mealDate = $meals[0]['meal_date'];
         $existing = \App\Models\Meal::where('meal_date', $mealDate)->exists();
 
         if($existing) {
@@ -53,7 +53,7 @@ class CredentialsController extends Controller
         foreach($meals as $meal) {
             \App\Models\Meal::create([
                 'member_name' => $meal['member_name'],
-                'member_id'   => $meal['member_id'], 
+                'member_id'   => $meal['member_id'],
                 'meal_count'  => $meal['meal_count'],
                 'meal_date'   => $meal['meal_date'],
             ]);
@@ -131,11 +131,15 @@ class CredentialsController extends Controller
         $khalaSalaryExcluded = [];
         $wifiBillExcluded = [];
         $electricityExcluded = [];
+        $serviceChargeExcluded = [];
+        $gasBillExcluded = [];
 
         foreach ($allMembers as $member) {
             $khalaKey      = 'khala_member' . ($member->id + 999);
             $wifiKey       = 'wifi_member' . ($member->id + 888);
             $electricityKey = 'electricity_member' . ($member->id + 777);
+            $serviceChargeKey = 'service_charge_member' . ($member->id + 111);
+            $gasBillKey = 'gas_bill_member' . ($member->id + 222);
 
             if ($request->has($khalaKey)) {
                 $khalaSalaryExcluded[$member->id] = $member->name;
@@ -145,6 +149,12 @@ class CredentialsController extends Controller
             }
             if ($request->has($electricityKey)) {
                 $electricityExcluded[$member->id] = $member->name;
+            }
+            if($request->has($serviceChargeKey)){
+                $serviceChargeExcluded[$member->id] = $member->name;
+            }
+            if($request->has($gasBillKey)){
+                $gasBillExcluded[$member->id] = $member->name;
             }
         }
 
@@ -157,30 +167,40 @@ class CredentialsController extends Controller
         $totalIncludedElectricity = $totalMembers - count($electricityExcluded);
         $perPersonElectricity = $totalIncludedElectricity > 0 ? $electricityBill / $totalIncludedElectricity : 0;
 
-        $perPersonService = $totalMembers > 0 ? ceil($serviceCharge / $totalMembers) : 0;
+        $totalIncludedServiceCrg = $totalMembers - count($serviceChargeExcluded);
+        $perPersonService = $totalIncludedServiceCrg > 0 ? $serviceCharge / $totalIncludedServiceCrg : 0;
+
+        $totalIncludedGasBill = $totalMembers - count($gasBillExcluded);
+        $perPersonGas = $totalIncludedGasBill > 0 ? $gasBill / $totalIncludedGasBill : 0;
+
         $perPersonGarbage = $totalMembers > 0 ? ceil($garbageCharge / $totalMembers) : 0;
-        $perPersonGas     = $totalMembers > 0 ? ceil($gasBill / $totalMembers) : 0;
 
         $monthlyExpenses = [];
         $grandTotal = 0;
 
         foreach ($allMembers as $member) {
-            $seatRent = $member->seat_rent ?? 0;
+            if($member->seat_rent != 0){
+                $seatRent= round($member->seat_rent/100 * $flatRent);
+            }else{
+                $seatRent = $member->seat_rent ?? 0;
+            }
 
             $perMemberKhala       = isset($khalaSalaryExcluded[$member->id]) ? 0 : $perPersonKhala;
             $perMemberWifi        = isset($wifiBillExcluded[$member->id]) ? 0 : $perPersonWifi;
             $perMemberElectricity = isset($electricityExcluded[$member->id]) ? 0 : $perPersonElectricity;
+            $perMemberService = isset($serviceChargeExcluded[$member->id]) ? 0 : $perPersonService;
+            $perMemberGas = isset($gasBillExcluded[$member->id]) ? 0 : $perPersonGas;
 
-            $totalExpense = $seatRent + $perPersonService + $perPersonGarbage
-                + $perPersonGas + $perMemberKhala + $perMemberWifi + $perMemberElectricity;
+            $totalExpense = $seatRent + $perMemberService + $perPersonGarbage
+                + $perMemberGas + $perMemberKhala + $perMemberWifi + $perMemberElectricity;
 
             $monthlyExpenses[] = [
                 'member'          => $member->name,
                 'flat_rent'       => $seatRent,
-                'service_charge'  => $perPersonService,
+                'service_charge'  => ceil($perMemberService),
                 'garbage_charge'  => $perPersonGarbage,
                 'electricity_bill'=> ceil($perMemberElectricity),
-                'gas_bill'        => $perPersonGas,
+                'gas_bill'        => ceil($perMemberGas),
                 'khala_salary'    => ceil($perMemberKhala),
                 'wifi_bill'       => ceil($perMemberWifi),
                 'total_amt'       => ceil($totalExpense),
@@ -204,5 +224,6 @@ class CredentialsController extends Controller
             ]
         ]);
     }
+
 
 }
