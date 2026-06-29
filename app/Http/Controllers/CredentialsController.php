@@ -133,6 +133,7 @@ class CredentialsController extends Controller
         $electricityExcluded = [];
         $serviceChargeExcluded = [];
         $gasBillExcluded = [];
+        $garbageExcluded = [];
 
         foreach ($allMembers as $member) {
             $khalaKey      = 'khala_member' . ($member->id + 999);
@@ -140,6 +141,7 @@ class CredentialsController extends Controller
             $electricityKey = 'electricity_member' . ($member->id + 777);
             $serviceChargeKey = 'service_charge_member' . ($member->id + 111);
             $gasBillKey = 'gas_bill_member' . ($member->id + 222);
+            $garbageKey = 'garbage_member' . ($member->id + 777);
 
             if ($request->has($khalaKey)) {
                 $khalaSalaryExcluded[$member->id] = $member->name;
@@ -155,6 +157,9 @@ class CredentialsController extends Controller
             }
             if($request->has($gasBillKey)){
                 $gasBillExcluded[$member->id] = $member->name;
+            }
+            if ($request->has($garbageKey)) {
+                $garbageExcluded[$member->id] = $member->name;
             }
         }
 
@@ -173,7 +178,11 @@ class CredentialsController extends Controller
         $totalIncludedGasBill = $totalMembers - count($gasBillExcluded);
         $perPersonGas = $totalIncludedGasBill > 0 ? $gasBill / $totalIncludedGasBill : 0;
 
-        $perPersonGarbage = $totalMembers > 0 ? ceil($garbageCharge / $totalMembers) : 0;
+//        $perPersonGarbage = $totalMembers > 0 ? ceil($garbageCharge / $totalMembers) : 0;
+
+        $totalIncludedGarbage = $totalMembers - count($garbageExcluded);
+        $perPersonGarbage = $totalIncludedGarbage > 0 ? $garbageCharge / $totalIncludedGarbage : 0;
+
 
         $monthlyExpenses = [];
         $grandTotal = 0;
@@ -190,15 +199,17 @@ class CredentialsController extends Controller
             $perMemberElectricity = isset($electricityExcluded[$member->id]) ? 0 : $perPersonElectricity;
             $perMemberService = isset($serviceChargeExcluded[$member->id]) ? 0 : $perPersonService;
             $perMemberGas = isset($gasBillExcluded[$member->id]) ? 0 : $perPersonGas;
+            $perMemberGarbage = isset($garbageExcluded[$member->id]) ? 0 : $perPersonGarbage;
 
-            $totalExpense = $seatRent + $perMemberService + $perPersonGarbage
+            $totalExpense = $seatRent + $perMemberService + $perMemberGarbage
                 + $perMemberGas + $perMemberKhala + $perMemberWifi + $perMemberElectricity;
 
             $monthlyExpenses[] = [
                 'member'          => $member->name,
                 'flat_rent'       => $seatRent,
                 'service_charge'  => ceil($perMemberService),
-                'garbage_charge'  => $perPersonGarbage,
+//                'garbage_charge'  => $perPersonGarbage,
+                'garbage_charge'  => ceil($perMemberGarbage),
                 'electricity_bill'=> ceil($perMemberElectricity),
                 'gas_bill'        => ceil($perMemberGas),
                 'khala_salary'    => ceil($perMemberKhala),
@@ -211,6 +222,7 @@ class CredentialsController extends Controller
 
         return response()->json([
             'status' => true,
+            'month' => ucfirst($request->input('month')),
             'monthly_expenses' => $monthlyExpenses,
             'grand_total' => $grandTotal,
             'amounts'=>[

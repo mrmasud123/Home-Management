@@ -163,7 +163,7 @@ $(document).ready(function(){
         });
         let form = $(this);
         let formData={}
-        form.find('input[name]').each(function () {
+        form.find('input[name],select[name]').each(function () {
             let name = $(this).attr('name');
             let type = $(this).attr('type');
 
@@ -193,6 +193,7 @@ $(document).ready(function(){
         } else {
             let html = `<div class="modal-content">
                 <div class="modal-body">
+                <h3>Month : ${data.month ?? 'N/A'}</h3>
                     <table class="table table-bordered table-hover table-stripped">
                         <thead>
                             <tr>
@@ -276,6 +277,11 @@ $(document).ready(function(){
                     type: 'hidden',
                     name: 'amounts',
                     value: JSON.stringify(data.amounts)
+                }));
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'month',
+                    value: data.month
                 }));
 
                 // Append, submit, and remove

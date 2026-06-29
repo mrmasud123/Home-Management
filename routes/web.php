@@ -93,6 +93,7 @@ Route::put('/meal/update/{id}', function($id, Request $request){
 Route::post('/generate-pdf', function (Request $request) {
     date_default_timezone_set('Asia/Dhaka');
     $data = [
+        'month' =>$request->month,
         'monthly_expenses' => json_decode($request->monthly_expenses, true),
         'grand_total' => $request->grand_total,
         'amounts'=> json_decode($request->amounts, true),
@@ -107,8 +108,7 @@ Route::post('/generate-pdf', function (Request $request) {
     $mpdf = new Mpdf([
         'mode' => 'utf-8',
         'format' => 'A6',
-        'margin-top'=>5,
-        'margin-bottom'=>5
+
     ]);
 
 

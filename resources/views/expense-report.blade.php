@@ -9,37 +9,36 @@
     <title>Document</title>
 </head>
 <body>
-    @php
-        $currentMonth = $data['month'] ?? date('F');
-        $currentMonthTimestamp = strtotime("first day of $currentMonth");
-        $month = date('F', strtotime('+1 month', $currentMonthTimestamp));
-    @endphp
+
     <div style="background-color: #f2f2f2; padding: 0px 10px;  border: 2px solid #4CAF50; border-radius: 10px; width: 100%; max-width: 600px; margin: 0 auto; font-family: sans-serif;">
         <h5 style="text-align: center; color: #4CAF50; margin-bottom: 20px;">Monthly Expense Summary</h5>
-        <h6 style="margin: 10px 0; color: #333;">Month : 
-            <span style="float: right; color: #000;">{{ $month }}</span>
+        <h6 style="margin: 10px 0; color: #333;">Month :
+            <span style="float: right; color: #000;">{{ $data['month'] }}</span>
         </h6>
-        <h6 style="margin: 10px 0; color: #333;">Flat Rent: 
+        <h6 style="margin: 10px 0; color: #333;">Flat Rent:
             <span style="float: right; color: #000;">{{ $data['amounts']['flat_rent'] }}</span>
         </h6>
 
-        <h6 style="margin: 10px 0; color: #333;">Service Charge: 
+        <h6 style="margin: 10px 0; color: #333;">Service Charge:
             <span style="float: right; color: #000;">{{ $data['amounts']['service_charge'] }}</span>
         </h6>
 
-        <h6 style="margin: 10px 0; color: #333;">Electricity Bill: 
+        <h6 style="margin: 10px 0; color: #333;">Electricity Bill:
             <span style="float: right; color: #000;">{{ $data['amounts']['electricity_bill'] }}</span>
         </h6>
 
-        <h6 style="margin: 10px 0; color: #333;">Wifi Bill: 
+        <h6 style="margin: 10px 0; color: #333;">Wifi Bill:
             <span style="float: right; color: #000;">{{ $data['amounts']['wifi_bill'] }}</span>
         </h6>
+        <h6 style="margin: 10px 0; color: #333;">Gas Bill:
+            <span style="float: right; color: #000;">{{ $data['amounts']['gas_bill'] }}</span>
+        </h6>
 
-        <h6 style="margin: 10px 0; color: #333;">Garbage Bill: 
+        <h6 style="margin: 10px 0; color: #333;">Garbage Bill:
             <span style="float: right; color: #000;">{{ $data['amounts']['garbage_charge'] }}</span>
         </h6>
 
-        <h6 style="margin: 10px 0; color: #333;">Khala Salary: 
+        <h6 style="margin: 10px 0; color: #333;">Khala Salary:
             <span style="float: right; color: #000;">{{ $data['amounts']['khala_salary'] }}</span>
         </h6>
 
