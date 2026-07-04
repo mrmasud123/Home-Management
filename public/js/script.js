@@ -191,51 +191,73 @@ $(document).ready(function(){
                 text: data.message
             });
         } else {
-            let html = `<div class="modal-content">
-                <div class="modal-body">
-                <h3>Month : ${data.month ?? 'N/A'}</h3>
-                    <table class="table table-bordered table-hover table-stripped">
-                        <thead>
-                            <tr>
-                                <th>সদস্য</th>
-                                <th>সিট ভাড়া</th>
-                                <th>সার্ভিস চার্জ</th>
-                                <th>ময়লা বিল</th>
-                                <th>বিদ্যূৎ বিল</th>
-                                <th>ওয়াইফাই বিল</th>
-                                <th>গ্যাস বিল</th>
-                                <th>খালার বেতন</th>
-                                <th>সর্বমোট</th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
+            let html = `<div class="modal-content bg-white rounded-2xl shadow-xl shadow-black/10 overflow-hidden max-w-5xl w-full mx-auto">
 
-            data.monthly_expenses.map((item) => {
-                html += `<tr class="bg-light">
-                    <td class="text-capitalize">${item.member}</td>
-                    <td>${item.flat_rent}</td>
-                    <td>${item.service_charge}</td>
-                    <td>${item.garbage_charge}</td>
-                    <td>${item.electricity_bill}</td>
-                    <td>${item.wifi_bill}</td>
-                    <td>${item.gas_bill}</td>
-                    <td>${item.khala_salary}</td>
-                    <td align="center"><span class="badge bg-info">${item.total_amt}</span></td>
-                </tr>`;
-            });
+                <div class="modal-body p-6">
 
-            html += `<tr>
-                        <td colspan="9" align="right"><span class="badge bg-success">
-                            ${data.grand_total}</span>
+                    <h3 class="flex items-center gap-2 text-lg font-bold text-[#20291F] mb-5">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-[#9CC5A1]/25 text-[#123328]">
+                            <i class="fas fa-calendar-days text-xs"></i>
+                        </span>
+                        Month : <span class="text-[#E8674B]">${data.month ?? 'N/A'}</span>
+                    </h3>
+
+                    <div class="overflow-x-auto rounded-xl border border-[#20291F]/10">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="bg-gradient-to-r from-[#123328] to-[#1B4536] text-[#FFF8EF]">
+                                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide">সদস্য</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide">সিট ভাড়া</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide">সার্ভিস চার্জ</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide">ময়লা বিল</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide">বিদ্যূৎ বিল</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide">ওয়াইফাই বিল</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide">গ্যাস বিল</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide">খালার বেতন</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide">সর্বমোট</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-[#20291F]/5">`;
+
+                        data.monthly_expenses.map((item) => {
+                            html += `<tr class="even:bg-[#FBF9F4] hover:bg-[#9CC5A1]/10 transition-colors">
+                        <td class="px-4 py-2.5 font-semibold text-[#20291F] capitalize">${item.member}</td>
+                        <td class="px-4 py-2.5 text-center text-[#20291F]/70">${item.flat_rent}</td>
+                        <td class="px-4 py-2.5 text-center text-[#20291F]/70">${item.service_charge}</td>
+                        <td class="px-4 py-2.5 text-center text-[#20291F]/70">${item.garbage_charge}</td>
+                        <td class="px-4 py-2.5 text-center text-[#20291F]/70">${item.electricity_bill}</td>
+                        <td class="px-4 py-2.5 text-center text-[#20291F]/70">${item.wifi_bill}</td>
+                        <td class="px-4 py-2.5 text-center text-[#20291F]/70">${item.gas_bill}</td>
+                        <td class="px-4 py-2.5 text-center text-[#20291F]/70">${item.khala_salary}</td>
+                        <td class="px-4 py-2.5 text-center">
+                            <span class="inline-flex items-center text-xs font-semibold bg-[#F2A65A]/20 text-[#9a6323] px-2.5 py-1 rounded-full">
+                                ${item.total_amt}
+                            </span>
                         </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="modal-footer">
-            <a href="javascript:void(0)" type="button" class="btn btn-primary pdf">Generate PDF</a>
-        </div>
-    </div>`;
+                    </tr>`;
+                        });
+
+                        html += `       <tr>
+                                    <td colspan="9" class="px-4 py-3.5 bg-[#0B241C]">
+                                        <div class="flex items-center justify-end gap-3">
+                                            <span class="text-xs font-medium text-[#FFF8EF]/60 uppercase tracking-wide">সর্বমোট</span>
+                                            <span class="inline-flex items-center text-sm font-bold bg-[#9CC5A1] text-[#123328] px-3.5 py-1.5 rounded-full">
+                                                ${data.grand_total}
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="modal-footer flex items-center justify-end gap-3 px-6 py-4 border-t border-[#20291F]/10 bg-[#FBF9F4]">
+                    <a href="javascript:void(0)" class="pdf inline-flex items-center gap-2 text-sm font-semibold bg-[#E8674B] hover:bg-[#d4573d] text-[#FFF8EF] px-5 py-2.5 rounded-full shadow-md shadow-[#E8674B]/20 transition-colors">
+                        <i class="fas fa-file-pdf"></i>Generate PDF
+                    </a>
+                </div>
+            </div>`;
 
             Swal.fire({
                 title: 'Monthly Expense',
