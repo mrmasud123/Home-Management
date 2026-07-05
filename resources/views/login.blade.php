@@ -65,7 +65,7 @@
                     <span class="relative bg-white dark:bg-gray-800 px-3 text-xs uppercase tracking-wider text-gray-400">or continue with email</span>
                 </div>
 
-                <form action="#" method="post" id="loginForm">
+                <form action="{{route('login.submit')}}" method="post" id="loginForm">
                     @csrf
                     <div class="space-y-5">
 
@@ -90,75 +90,80 @@
 
 {{--@push('scripts')--}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <script>
-        document.addEventListener('app:ready', function () {
+//         document.addEventListener('app:ready', function () {
+// console.log("uiu");
+//             window.$(function () {
 
-            window.$(function () {
+                $(document).ready(function(){
+                    console.log("App ready");
 
-                var form = $("#loginForm");
+                    var form = $("#loginForm");
 
-                form.on("submit", function (e) {
-                    e.preventDefault();
+                    form.on("submit", function (e) {
+                        e.preventDefault();
+                        console.log("Login");
+                        let email = $("#email").val();
 
-                    let email = $("#email").val();
-
-                    if (!email) {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Missing Field',
-                            text: 'Please enter your email'
-                        });
-                        return;
-                    }
-
-                    $.ajax({
-                        url: form.attr('action'),
-                        type: form.attr("method"),
-                        data: form.serialize(),
-                        beforeSend: function () {
+                        if (!email) {
                             Swal.fire({
-                                title: 'Signing in...',
-                                text: 'Please wait',
-                                allowOutsideClick: false,
-                                didOpen: () => {
-                                    Swal.showLoading();
-                                }
+                                icon: 'warning',
+                                title: 'Missing Field',
+                                text: 'Please enter your email'
                             });
-                        },
-                        success: function (response) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success',
-                                text: response.message,
-                                timer: 1500,
-                                showConfirmButton: false
-                            });
-
-                            setTimeout(() => {
-                                window.location.href = "/";
-                            }, 1500);
-                        },
-                        error: function (xhr) {
-                            let message = "Sign in failed";
-
-                            if (xhr.responseJSON && xhr.responseJSON.message) {
-                                message = xhr.responseJSON.message;
-                            }
-
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: message
-                            });
+                            return;
                         }
-                    });
 
+                        $.ajax({
+                            url: form.attr('action'),
+                            type: form.attr("method"),
+                            data: form.serialize(),
+                            beforeSend: function () {
+                                Swal.fire({
+                                    title: 'Signing in...',
+                                    text: 'Please wait',
+                                    allowOutsideClick: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    }
+                                });
+                            },
+                            success: function (response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: response.message,
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+
+                                setTimeout(() => {
+                                    window.location.href = "/";
+                                }, 1500);
+                            },
+                            error: function (xhr) {
+                                let message = "Sign in failed";
+
+                                if (xhr.responseJSON && xhr.responseJSON.message) {
+                                    message = xhr.responseJSON.message;
+                                }
+
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: message
+                                });
+                            }
+                        });
+
+                    });
                 });
 
-            });
-
-        });
+        //     });
+        //
+        // });
     </script>
 {{--@endpush--}}
 

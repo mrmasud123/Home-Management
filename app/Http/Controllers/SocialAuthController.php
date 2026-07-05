@@ -11,8 +11,29 @@ use Laravel\Socialite\Facades\Socialite;
 
 class SocialAuthController extends Controller
 {
-    public function login(Request $request){
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
 
+        $member = Member::where('email', $request->email)->first();
+
+        if (! $member) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No account found with this email.',
+            ], 404);
+        }
+
+        Auth::login($member, remember: true);
+        $request->session()->regenerate();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Logged in successfully.',
+            'redirect' => route('meal.home'),
+        ], 200);
     }
     public function redirect(Request $request)
     {
