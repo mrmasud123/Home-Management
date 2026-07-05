@@ -24,8 +24,8 @@ class Member extends Authenticatable
     protected $hidden = ['remember_token'];
 
     protected $casts = [
-        'joined_date' => 'date',
-        'status' => 'boolean',
+        'joined_date' => 'date:Y-m-d',
+//        'status' => 'boolean',
     ];
 
     protected $guarded=[];
