@@ -17,11 +17,15 @@ use Carbon\Carbon;
 
 // routes/web.php
 Route::get('/auth/google/redirect', [SocialAuthController::class, 'redirect'])->name('auth.google.redirect');
+
 Route::get('/auth/google/callback', [SocialAuthController::class, 'callback'])->name('auth.google.callback');
+
 Route::get('/login', function(){
     return view('login');
 })->name('login');
+
 Route::post('/login', [SocialAuthController::class, 'login'])->name('login.submit');
+
 Route::middleware(['auth:sanctum', 'web'])->group(function(){
     Route::post('/logout', [SocialAuthController::class, 'logout'])->name('auth.logout');
     Route::get('/', function(Request $request){
