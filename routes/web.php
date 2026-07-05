@@ -175,4 +175,8 @@ Route::middleware(['auth:sanctum', 'web'])->group(function(){
     Route::post('/members/update-status/{id}', [MemberController::class, 'updateStatus']);
     Route::get('/ai-chat', [AIChatController::class, 'index'])->name('ai.chat.index');
     Route::post('/continue-chat', [\App\Http\Controllers\AIChatController::class, 'continueChat'])->name('admin.ai-chat.continue');
+    Route::get('/daily-bazar-entry', [CredentialsController::class, 'dailyBazarEntry'])->name('daily.bazar.entry');
+    Route::post('/daily-bazar-entry', [CredentialsController::class, 'dailyBazarStore'])->name('daily-bazar-entry.submit');
+    Route::get('/bazar-entries/date/{date}', [CredentialsController::class, 'byDate']);
+    Route::delete('/bazar-entries/{id}', [CredentialsController::class, 'destroy']);
 });

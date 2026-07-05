@@ -238,4 +238,47 @@ class CredentialsController extends Controller
     }
 
 
+//    public function dailyBazarEntry(){
+//        return view('daily-bazar-entry');
+//    }
+
+    public function dailyBazarEntry(Request $request)
+    {
+
+        $currentMonthFull = Carbon::now()->format('F');
+        $date = $request->query('date', now()->format('Y-m-d'));
+
+        $members = Member::where('status', 1)->orderBy('name')->get();
+        $entries = Bazar::where('bazar_amt_date', $date)->orderBy('member_name')->get();
+
+        return view('daily-bazar-entry', compact('date', 'members', 'entries','currentMonthFull'));
+    }
+
+    public function dailyBazarStore(Request $request)
+    {
+
+        return $request->all();
+
+        $request->validate([
+            'bazar_amt_date' => 'required|date',
+            'entries' => 'required|array',
+        ]);
+
+        foreach ($request->entries as $memberId => $entry) {
+            if (!empty($entry['amount']) && $entry['amount'] > 0) {
+                Bazar::create([
+                    'member_id' => $memberId,
+                    'member_name' => $entry['name'],
+                    'amount' => $entry['amount'],
+                    'bazar_amt_date' => $request->bazar_amt_date,
+                ]);
+            }
+        }
+
+        return redirect()
+            ->route('bazar.create', ['date' => $request->bazar_amt_date])
+            ->with('success', 'Bazar entries saved successfully.');
+    }
+
+
 }

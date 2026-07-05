@@ -129,9 +129,16 @@
                class="inline-flex items-center gap-2 text-sm font-medium bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full transition-colors">
                 <i class="fas fa-plus text-xs"></i> Flat Credentials
             </a>
-            <a href="{{ route('ai.chat.index') }}"
+            @if($admin)
+                <a href="{{ route('ai.chat.index') }}"
+                   class="inline-flex items-center gap-2 text-sm font-medium bg-[#F2A65A] text-[#123328] hover:bg-[#e39548] px-4 py-2 rounded-full transition-colors">
+                    <i class="fas fa-wand-magic-sparkles text-xs"></i> AI Chat
+                </a>
+            @endif
+
+            <a href="{{ route('daily.bazar.entry') }}"
                class="inline-flex items-center gap-2 text-sm font-medium bg-[#F2A65A] text-[#123328] hover:bg-[#e39548] px-4 py-2 rounded-full transition-colors">
-                <i class="fas fa-wand-magic-sparkles text-xs"></i> AI Chat
+                <i class="fas fa-wand-magic-sparkles text-xs"></i> Daily Bazar Entry
             </a>
         </div>
     </div>
