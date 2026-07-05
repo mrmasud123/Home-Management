@@ -126,8 +126,8 @@ Route::middleware(['auth:sanctum', 'web'])->group(function(){
         $mpdf->WriteHTML($html);
         $currentMonth = $data['month'] ?? date('F');
         $currentMonthTimestamp = strtotime("first day of $currentMonth");
-        $month = date('F', strtotime('+1 month', $currentMonthTimestamp));
-        return response($mpdf->Output($month.'_expense.pdf', 'I'), 200)
+        $month = date('F', strtotime($currentMonthTimestamp));
+        return response($mpdf->Output($currentMonth.'_expense.pdf', 'I'), 200)
             ->header('Content-Type', 'application/pdf');
     });
     Route::get('/bazar-report/{date}', [BazarController::class, 'generateReport'])->name('bazar.report');
