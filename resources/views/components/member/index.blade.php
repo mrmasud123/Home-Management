@@ -140,8 +140,10 @@
                         <th class="px-6 py-3 font-semibold">Email</th>
                         <th class="px-6 py-3 font-semibold">Join Date</th>
                         <th class="px-6 py-3 font-semibold">Status</th>
-                        <th class="px-6 py-3 font-semibold">Seat Rent</th>
-                        <th class="px-6 py-3 font-semibold text-right">Action</th>
+                        @if($admin)
+                            <th class="px-6 py-3 font-semibold">Seat Rent</th>
+                            <th class="px-6 py-3 font-semibold text-right">Action</th>
+                        @endif
                     </tr>
                     </thead>
                     <tbody class="divide-y divide-[#20291F]/5">
@@ -177,12 +179,12 @@
                                         </span>
                                 @endif
                             </td>
+                            @if($admin)
                             <td class="px-6 py-3.5">
                                     <span class="inline-flex items-center gap-1 text-xs font-semibold bg-[#F2A65A]/15 text-[#9a6323] px-2.5 py-1 rounded-full">
                                         <i class="fas fa-bangladeshi-taka-sign text-[10px]"></i>{{ $member->seat_rent ?? 0 }}
                                     </span>
                             </td>
-                            @if($admin)
                                 <td class="px-6 py-3.5">
                                     <div class="flex items-center justify-end gap-2">
                                         <button type="button"
